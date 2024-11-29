@@ -1,27 +1,51 @@
 import { Button } from "@/components/ui/button"
+import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage, Form as FormElement } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { useForm, SubmitHandler } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
 import { z } from "zod"
-
-interface FormInputs {
-    Text: string
-}
-
+ 
 const formSchema = z.object({
-    todo: z.string().min(2).max(50)
+  Todo: z.string().min(3, {
+    message: "To do must be at least 3 characters.",
+  })
+  .max(20, {message: "To do must be at no more than 20 characters."}),
 })
-
+ 
 export default function Form({add}) {
-    const { register, handleSubmit } = useForm<FormInputs>()
+  const formData = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      Todo: "",
+    },
+  })
+ 
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    add({ text: values.Todo, completed: false })
+    formData.resetField("Todo")
+  }
 
-    const onSubmitFunction: SubmitHandler<FormInputs> = (data) => {        
-        add({ text: data.Text, completed: false })
-      }
-
-    return (
-        <form onSubmit={handleSubmit(onSubmitFunction)} className='flex gap-10 justify-center'>
-            <Input {...register("Text")} className='w-2/3 md:w-1/4 rounded-md border-solid border-2 border-black p-1' type="text" placeholder="Add a new todo" required/>
-            <Button type='submit'>Submit</Button>
-        </form>
-    )
+  return (
+    <FormElement {...formData}>
+      <form onSubmit={formData.handleSubmit(onSubmit)} className='flex flex-row justify-around items-center'>
+        <FormField
+          control={formData.control}
+          name="Todo"
+          render={({ field }) => (
+            <FormItem className="w-2/3">
+              <FormLabel>To do</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormDescription>
+                Enter your task
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Submit</Button>
+      </form>
+    </FormElement>
+  )
 }
