@@ -7,33 +7,31 @@ import { Button } from "@/components/ui/button"
 import Form from './features/Form';
 
 function App() {
-  const [todos, addTodo, removeTodo, toggleTodo] = useLocalStorageTodo([]);
+  const [todos, addTodo, removeTodo, toggleTodo] = useLocalStorageTodo('todos');
 
   return (
-    <>
+    <main>
       <h1 className="my-2 py-2 text-xl text-center shadow-md">Nivesh's To Do List</h1>
-      <div>
-        <Form add={addTodo} />
-      </div>
+      <Form add={addTodo} />
       {todos.length !== 0 ? (
-        <div className="mt-5 py-5 border-neutral-950 border-2">
-        <ul>
+        <ul className="py-5 border-neutral-950 border-2">
           {todos.map((todo: { completed: boolean; text: string; }, index: Key) => (
-            <li key={index} className={todo.completed ? 'line-through decoration-2' : 'none'}>
+            <li key={index} className={`${todo.completed ? 'line-through decoration-2' : 'none'} text-center font-medium`}>
               {todo.text}
 
               <span>
                 <Button variant="ghost" size={"icon"} onClick={() => toggleTodo(index)}>
                   {todo.completed ? <img src={undoSvg} /> : <img src={doneSvg} />}
                 </Button>
-                <Button variant="ghost" size={"icon"} onClick={() => removeTodo(index)}><img src={deleteSvg} /></Button>
+                <Button variant="ghost" size={"icon"} onClick={() => removeTodo(index)}>
+                  <img src={deleteSvg} />
+                </Button>
               </span>
             </li>
           ))}
         </ul>
-      </div> 
       ) : ''}
-    </>
+    </main>
 
   )
 }
