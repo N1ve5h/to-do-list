@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
-import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage, Form as FormElement } from "@/components/ui/form"
+import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form as FormElement } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -11,7 +11,7 @@ const formSchema = z.object({
     message: "To do must be at least 3 characters.",
   })
   .max(20, {message: "To do must be at no more than 20 characters."}),
-  isDeadline: z.boolean()
+  isDeadline: z.boolean().default(false).optional()
 })
  
 export default function Form({add}) {
@@ -19,29 +19,28 @@ export default function Form({add}) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       Todo: "",
+      isDeadline: false
     },
   })
  
   function onSubmit(values: z.infer<typeof formSchema>) {
-    add({ text: values.Todo, completed: false })
+    add({ text: values.Todo, completed: false, deadline: values.isDeadline })
     formData.resetField("Todo")
+    formData.resetField("isDeadline")
   }
 
   return (
     <FormElement {...formData}>
-      <form onSubmit={formData.handleSubmit(onSubmit)} className='w-11/12 flex flex-col justify-around items-start gap-4'>
+      <form onSubmit={formData.handleSubmit(onSubmit)} className='flex flex-col justify-center items-center gap-4 rounded-md p-4'>
         <FormField
           control={formData.control}
           name="Todo"
           render={({ field }) => (
-            <FormItem className="w-full">
+            <FormItem className="w-1/3">
               <FormLabel>To do</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
-              <FormDescription>
-                Enter your task
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -50,7 +49,7 @@ export default function Form({add}) {
           control={formData.control}
           name="isDeadline"
           render={({ field }) => (
-            <FormItem className="w-1/3 flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
               <FormControl>
                 <Checkbox
                   checked={field.value}
