@@ -4,7 +4,7 @@ const useLocalStorageTodo = (getItemStorage: string) => {
   const [todos, setTodos] = useState(() => {
     // Get the initial value from localStorage if available, otherwise use the provided initialValue   
     const storedTodos = localStorage.getItem(getItemStorage);
-    return storedTodos ? JSON.parse(storedTodos) : '';
+    return storedTodos ? JSON.parse(storedTodos) : [];
   });
 
   useEffect(() => {
@@ -23,9 +23,9 @@ const useLocalStorageTodo = (getItemStorage: string) => {
   };
 
   const toggleTodo = (index: number) => {
-    const newTodos = [...todos];
-    newTodos[index].completed = !newTodos[index].completed;
-    setTodos(newTodos);
+    setTodos(todos.map(todo =>
+      todo.index === index ? { ...todo, completed: !todo.completed } : todo
+    ))
   };
 
   return [todos, addTodo, removeTodo, toggleTodo];
