@@ -13,7 +13,7 @@ const formSchema = z.object({
   .max(20, {message: "To do must be at no more than 20 characters."}),
   isDeadline: z.boolean().default(false).optional()
 })
- 
+
 export default function Form({onAdd}) {
   const formData = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -25,8 +25,7 @@ export default function Form({onAdd}) {
  
   function onSubmit(values: z.infer<typeof formSchema>) {
     onAdd({ text: values.Todo, completed: false, deadline: values.isDeadline })
-    formData.resetField("Todo")
-    formData.resetField("isDeadline")
+    formData.reset()
   }
 
   return (
