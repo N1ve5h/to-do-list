@@ -24,7 +24,7 @@ export default function Form({onAdd}) {
   })
  
   function onSubmit(values: z.infer<typeof formSchema>) {
-    onAdd({ text: values.Todo, completed: false, deadline: values.isDeadline })
+    onAdd({ id: Date.now().toString(), text: values.Todo, completed: false, deadline: values.isDeadline })
     formData.reset()
   }
 

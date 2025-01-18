@@ -12,21 +12,19 @@ const useLocalStorageTodo = (getItemStorage: string) => {
     localStorage.setItem(getItemStorage, JSON.stringify(todos));
   }, [todos]);
 
-  const addTodo = (newTodo: string) => {
-    setTodos([...todos, newTodo]);
-  };
+  const addTodo = (newTodo) => {
+    setTodos([...todos, newTodo])
+  }
 
-  const removeTodo = (index: number) => {
-    const newTodos = [...todos];
-    newTodos.splice(index, 1);
-    setTodos(newTodos);
-  };
+  const removeTodo = (id: string) => {
+    setTodos(todos.filter(todo => todo.id !== id))
+  }
 
-  const toggleTodo = (index: number) => {
+  const toggleTodo = (id: string) => {
     setTodos(todos.map(todo =>
-      todo.index === index ? { ...todo, completed: !todo.completed } : todo
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
     ))
-  };
+  }
 
   return [todos, addTodo, removeTodo, toggleTodo];
 };
