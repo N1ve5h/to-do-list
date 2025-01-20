@@ -2,9 +2,12 @@ import useLocalStorageTodo from '@/hooks/useLocalStorageTodo';
 import Form from './components/Form';
 import { AnimatePresence } from 'framer-motion'
 import { TodoItem } from '@/components/todo-item'
+import { TodoSummary } from '@/components/todo-summary'
 
 function App() {
   const [todos, addTodo, removeTodo, toggleTodo] = useLocalStorageTodo('todos');
+  
+  const completedTodos = todos.filter(todo => todo.completed)
   
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -14,7 +17,7 @@ function App() {
           <div className="md:col-span-2">
             <Form onAdd={addTodo} />
           </div>
-          {/* <TodoSummary total={todos.length} completed={completedTodos.length} /> */}
+          <TodoSummary total={todos.length} completed={completedTodos.length} />
         </div>
         <AnimatePresence>
           <div className="space-y-4">
